@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Admin Dashboard - OCALM{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2><i class="fas fa-chart-line text-primary"></i> Dashboard Administrateur</h2>
+
+    <!-- Statistiques -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h3>{{ total_users }}</h3>
+                    <p>Utilisateurs</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h3>{{ total_orders }}</h3>
+                    <p>Commandes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h3>{{ total_revenue|floatformat:0 }} FCFA</h3>
+                    <p>Chiffre d'affaires</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h3>{{ pending_orders }}</h3>
+                    <p>Commandes en attente</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphique -->
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Évolution des ventes</div>
+                <div class="card-body">
+                    <canvas id="salesChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Top vendeurs</div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for seller in top_sellers %}
+                        <li class="list-group-item">{{ seller.seller_name }} - {{ seller.total|floatformat:0 }} FCFA</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    new Chart(document.getElementById('salesChart'), {
+        type: 'line',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{ label: 'Ventes (FCFA)', data: {{ chart_data|safe }}, borderColor: '#007bff', fill: false }]
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCALM - {% block title %}Paiement sécurisé{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .navbar-brand { font-weight: bold; font-size: 1.5rem; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { min-height: 100vh; display: flex; flex-direction: column; }
+        main { flex: 1; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'pages:home' %}">
+                <i class="fas fa-shield-alt"></i> OCALM
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <!-- MENU POUR ACHETEUR -->
+                        {% if user.role == 'buyer' %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:listings' %}"><i class="fas fa-store"></i> Boutique</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:wallet' %}"><i class="fas fa-wallet"></i> Portefeuille</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:favorites' %}"><i class="fas fa-heart"></i> Favoris</a></li>
+
+                        <!-- MENU POUR VENDEUR -->
+                        {% elif user.role == 'seller' %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:listings' %}"><i class="fas fa-store"></i> Boutique</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:wallet' %}"><i class="fas fa-wallet"></i> Portefeuille</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:social_media_dashboard' %}"><i class="fas fa-chart-line"></i> Marketing</a></li>
+
+                        <!-- MENU POUR LIVREUR -->
+                        {% elif user.role == 'delivery' %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:delivery_dashboard' %}"><i class="fas fa-truck"></i> Livraisons</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:wallet' %}"><i class="fas fa-wallet"></i> Gains</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:profile' %}"><i class="fas fa-user"></i> Profil</a></li>
+                        {% endif %}
+
+                        <!-- MENU ADMIN -->
+                        {% if user.role == 'admin' or user.is_superuser %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'pages:admin_dashboard' %}"><i class="fas fa-chart-line"></i> Admin</a></li>
+                        {% endif %}
+
+                        <!-- ÉLÉMENTS COMMUNS -->
+                        <li class="nav-item"><a class="nav-link" href="{% url 'pages:logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'pages:home' %}">Accueil</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'pages:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-light text-primary" href="{% url 'pages:register' %}"><i class="fas fa-user-plus"></i> Inscription</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2024 OCALM - Paiement sécurisé</p>
+            <small>
+                <a href="{% url 'pages:about' %}" class="text-white">À propos</a> |
+                <a href="{% url 'pages:contact' %}" class="text-white">Contact</a> |
+                <a href="{% url 'pages:terms' %}" class="text-white">Conditions</a>
+            </small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0066FF">
+<script>
+// Demander la permission pour les notifications
+if ('Notification' in window) {
+    Notification.requestPermission();
+}
+
+// Vérifier les nouvelles commandes toutes les 30 secondes
+setInterval(function() {
+    fetch('/api/check-notifications/')
+        .then(response => response.json())
+        .then(data => {
+            if(data.new_orders > 0 && Notification.permission === 'granted') {
+                new Notification('📦 Nouvelle commande !', {
+                    body: `Vous avez ${data.new_orders} nouvelle(s) commande(s)`,
+                    icon: '/static/icon.png'
+                });
+            }
+        });
+}, 30000);
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/static/service-worker.js');
+}
+</script>
+<!-- PWA Meta Tags -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="OCALM">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0066FF">
+<!-- Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/static/sw.js')
+      .then(reg => console.log('Service Worker enregistré'))
+      .catch(err => console.log('Erreur Service Worker:', err));
+  });
+}
+
+// Demander installation de l'app
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Afficher un bouton "Installer l'application"
+  const installBtn = document.getElementById('installBtn');
+  if(installBtn) installBtn.style.display = 'block';
+});
+</script>
+
+<button id="installBtn" style="display: none;" onclick="installApp()">
+  📱 Installer l'application
+</button>
+
+<script>
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('Utilisateur a installé l\'app');
+      }
+      deferredPrompt = null;
+    });
+  }
+}
+</script>

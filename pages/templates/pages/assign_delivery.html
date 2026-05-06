@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Assigner un livreur - OCALM{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card fade-in">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0"><i class="fas fa-truck"></i> Assigner un livreur</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <strong>Transaction :</strong> {{ delivery.transaction_id }}<br>
+                        {% if transaction %}
+                            <strong>Vendeur :</strong> {{ transaction.seller_name }}<br>
+                            <strong>Acheteur :</strong> {{ transaction.buyer_name }}<br>
+                            <strong>Montant :</strong> {{ transaction.amount }} FCFA
+                        {% endif %}
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Choisir un livreur</label>
+                            <select name="driver_name" class="form-select" required>
+                                <option value="">-- Sélectionner un livreur --</option>
+                                {% for driver in drivers %}
+                                <option value="{{ driver.username }}">
+                                    {{ driver.username }} - {{ driver.phone_number }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Téléphone du livreur</label>
+                            <input type="tel" name="driver_phone" class="form-control"
+                                   placeholder="+225 XX XX XX XX XX">
+                            <small class="text-muted">Optionnel si déjà renseigné</small>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-grow-1">
+                                <i class="fas fa-check"></i> Assigner le livreur
+                            </button>
+                            <a href="{% url 'delivery_dashboard' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Liste des livreurs disponibles</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nom d'utilisateur</th>
+                                    <th>Téléphone</th>
+                                    <th>Livraisons effectuées</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for driver in drivers %}
+                                <tr>
+                                    <td><strong>{{ driver.username }}</strong></td>
+                                    <td>{{ driver.phone_number }}</td>
+                                    <td>{{ driver.delivery_count|default:0 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-4">
+                                        <i class="fas fa-users fa-2x text-muted"></i>
+                                        <p>Aucun livreur disponible</p>
+                                        <a href="{% url 'register' %}" class="btn btn-sm btn-primary">
+                                            Créer un compte livreur
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

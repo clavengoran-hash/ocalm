@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Messagerie - OCALM{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-comments"></i> Mes conversations</h5>
+                </div>
+                <div class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
+                    {% for room in chat_rooms %}
+                    <a href="{% url 'chat_room' room.id %}" class="list-group-item list-group-item-action {% if room.id == current_room.id %}active{% endif %}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>
+                                    {% if user.username == room.buyer_name %}
+                                        {{ room.seller_name }}
+                                    {% else %}
+                                        {{ room.buyer_name }}
+                                    {% endif %}
+                                </strong>
+                                <br>
+                                <small class="text-muted">Transaction: {{ room.transaction_id|truncatechars:15 }}</small>
+                            </div>
+                            {% if room.unread_count > 0 %}
+                                <span class="badge bg-danger rounded-pill">{{ room.unread_count }}</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% empty %}
+                    <div class="list-group-item text-center py-5">
+                        <i class="fas fa-comments fa-3x text-muted mb-2"></i>
+                        <p>Aucune conversation</p>
+                        <small class="text-muted">Les conversations commencent après une transaction</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            {% if current_room %}
+            <div class="card">
+                <div class="card-header bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-circle"></i>
+                            Discussion avec <strong>{{ other_user }}</strong>
+                        </h5>
+                        <small class="text-muted">Transaction: {{ current_room.transaction_id|truncatechars:20 }}</small>
+                    </div>
+                </div>
+                <div class="card-body" id="chatMessages" style="height: 450px; overflow-y: auto;">
+                    {% if messages %}
+                        {% for msg in messages %}
+                            <div class="mb-3 {% if msg.sender_name == user.username %}text-end{% endif %}">
+                                <div class="d-inline-block p-3 rounded {% if msg.sender_name == user.username %}bg-primary text-white{% else %}bg-light{% endif %}" style="max-width: 75%;">
+                                    <small class="d-block">{{ msg.message }}</small>
+                                    <small class="opacity-75" style="font-size: 10px;">
+                                        <i class="far fa-clock"></i> {{ msg.created_at|date:"H:i" }}
+                                    </small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-comment-dots fa-4x mb-3"></i>
+                            <p>Aucun message. Commencez la conversation !</p>
+                        </div>
+                    {% endif %}
+                    <div id="chatBottom"></div>
+                </div>
+                <div class="card-footer">
+                    <form method="post" action="{% url 'send_message' current_room.id %}" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="text" name="message" class="form-control" placeholder="Écrivez votre message..." required autocomplete="off">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fas fa-paper-plane"></i> Envoyer
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div class="card text-center">
+                <div class="card-body py-5">
+                    <i class="fas fa-comments fa-5x text-muted mb-3"></i>
+                    <h4>Bienvenue dans votre messagerie</h4>
+                    <p class="text-muted">Sélectionnez une conversation pour commencer à discuter</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function scrollToBottom() {
+        const chatDiv = document.getElementById('chatMessages');
+        if (chatDiv) {
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
+    }
+    scrollToBottom();
+
+    setTimeout(function() {
+        location.reload();
+    }, 10000);
+</script>
+{% endblock %}

@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% block title %}Business Manager - OCALM{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4"><i class="fas fa-chart-line"></i> Business Manager</h2>
+    <p class="text-muted">Gérez vos publications sur les réseaux sociaux depuis OCALM</p>
+
+    <div class="row">
+        <!-- Facebook Panel -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <i class="fab fa-facebook-f text-primary"></i>
+                    <strong> Facebook Business</strong>
+                </div>
+                <div class="card-body">
+                    {% if facebook_account %}
+                        <div class="alert alert-success">
+                            ✅ Connecté en tant que <strong>{{ facebook_account.page_name }}</strong>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Statistiques globales</strong>
+                            <div class="row text-center mt-2">
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="fw-bold text-primary">{{ total_facebook_posts }}</div>
+                                        <small>Publications</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="fw-bold text-primary">{{ total_facebook_likes }}</div>
+                                        <small>J'aime</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="fw-bold text-primary">{{ total_facebook_views }}</div>
+                                        <small>Vues</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Connectez votre page Facebook pour publier automatiquement</p>
+                        <a href="{% url 'connect_facebook_business' %}" class="btn btn-primary w-100">
+                            <i class="fab fa-facebook-f"></i> Connecter Facebook Business
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Instagram Panel -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <i class="fab fa-instagram text-danger"></i>
+                    <strong> Instagram Business</strong>
+                </div>
+                <div class="card-body">
+                    {% if instagram_account %}
+                        <div class="alert alert-success">
+                            ✅ Compte Instagram connecté
+                        </div>
+                        <div class="mb-3">
+                            <strong>Statistiques globales</strong>
+                            <div class="row text-center mt-2">
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="fw-bold text-danger">{{ total_instagram_posts }}</div>
+                                        <small>Publications</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="fw-bold text-danger">{{ total_instagram_likes }}</div>
+                                        <small>J'aime</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="fw-bold text-danger">{{ total_instagram_comments }}</div>
+                                        <small>Commentaires</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Connectez votre compte Instagram Business</p>
+                        <button class="btn btn-danger w-100" disabled>
+                            <i class="fab fa-instagram"></i> Configuration requise
+                        </button>
+                        <small class="text-muted">Contactez l'administrateur pour configurer Instagram Business</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mes annonces à publier -->
+    <div class="card mt-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fas fa-store"></i> Publier une annonce</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Annonce</th>
+                            <th>Prix</th>
+                            <th>Publier sur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for listing in listings %}
+                        <tr>
+                            <td><a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a></td>
+                            <td>{{ listing.price }} FCFA</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'publish_to_facebook' listing.id %}" class="btn btn-sm btn-primary" onclick="return confirm('Publier sur Facebook ?')">
+                                        <i class="fab fa-facebook-f"></i> Facebook
+                                    </a>
+                                    <a href="{% url 'publish_to_instagram' listing.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Publier sur Instagram ?')">
+                                        <i class="fab fa-instagram"></i> Instagram
+                                    </a>
+                                    <a href="https://www.tiktok.com/@upload?text={{ listing.title }}" target="_blank" class="btn btn-sm btn-dark">
+                                        <i class="fab fa-tiktok"></i> TikTok
+                                    </a>
+                                    <a href="https://wa.me/?text={{ listing.title }}%20-%20{{ listing.price }}%20FCFA" target="_blank" class="btn btn-sm btn-success">
+                                        <i class="fab fa-whatsapp"></i> WhatsApp
+                                    </a>
+                                </div>
+                             </td>
+                         </tr>
+                        {% empty %}
+                         <tr><td colspan="3" class="text-center py-4">Aucune annonce</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historique des publications -->
+    <div class="card mt-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fas fa-history"></i> Historique des publications</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Annonce</th>
+                            <th>Plateforme</th>
+                            <th>Date</th>
+                            <th>Statistiques</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in social_posts %}
+                         <tr>
+                            <td>{{ post.listing.title }}</td>
+                            <td>
+                                {% if post.platform == 'facebook' %}
+                                    <i class="fab fa-facebook-f text-primary"></i> Facebook
+                                {% elif post.platform == 'instagram' %}
+                                    <i class="fab fa-instagram text-danger"></i> Instagram
+                                {% endif %}
+                            </td>
+                            <td>{{ post.published_at|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if post.platform == 'facebook' %}
+                                    👁️ {{ post.views|default:0 }} | 👍 {{ post.likes|default:0 }}
+                                {% elif post.platform == 'instagram' %}
+                                    ❤️ {{ post.likes|default:0 }} | 💬 {{ post.comments|default:0 }}
+                                {% endif %}
+                            </td>
+                         </tr>
+                        {% empty %}
+                         <tr><td colspan="4" class="text-center py-4">Aucune publication</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

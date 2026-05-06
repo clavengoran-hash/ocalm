@@ -1,0 +1,66 @@
+/* Variables CSS pour les thèmes */
+:root {
+    /* Thème clair (par défaut) */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --text-primary: #1a1a2e;
+    --text-secondary: #6c757d;
+    --border-color: #e9ecef;
+    --card-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    --navbar-bg: #1a1a2e;
+    --navbar-text: #ffffff;
+}
+
+[data-theme="dark"] {
+    /* Thème sombre */
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --border-color: #2c3e50;
+    --card-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    --navbar-bg: #0f0f1a;
+    --navbar-text: #ffffff;
+}
+
+/* Application des variables */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: background 0.3s ease;
+}
+
+body.light-theme {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+body.dark-theme {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.card, .stat-card {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+/* Bouton de changement de thème */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: none;
+    color: white;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.3s, background 0.3s;
+    box-shadow: 0 4px 15px rgba(0,102,255,0.3);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    background: var(--primary-dark);
+}

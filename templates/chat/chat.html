@@ -1,0 +1,22 @@
+<div id="chat-messages"></div>
+<input type="text" id="message-input" placeholder="Votre message...">
+<button id="send-btn">Envoyer</button>
+
+<script>
+    const ws = new WebSocket('ws://localhost:8000/ws/chat/room-1/');
+
+    ws.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        document.getElementById('chat-messages').innerHTML +=
+            `<div><strong>${data.username}:</strong> ${data.message}</div>`;
+    };
+
+    document.getElementById('send-btn').onclick = function() {
+        const message = document.getElementById('message-input').value;
+        ws.send(JSON.stringify({
+            'message': message,
+            'username': '{{ user.username }}'
+        }));
+        document.getElementById('message-input').value = '';
+    };
+</script>

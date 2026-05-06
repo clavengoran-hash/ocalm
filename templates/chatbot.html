@@ -1,0 +1,21 @@
+<div class="chatbot-container">
+    <div id="chat-messages"></div>
+    <input type="text" id="user-input" placeholder="Posez votre question...">
+    <button onclick="sendMessage()">Envoyer</button>
+</div>
+
+<script>
+function sendMessage() {
+    const message = document.getElementById('user-input').value;
+    fetch('/chatbot/api/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        body: new URLSearchParams({message: message})
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('chat-messages').innerHTML +=
+            `<div>🤖: ${data.response}</div>`;
+    });
+}
+</script>

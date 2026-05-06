@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}Programme de parrainage - OCALM{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white text-center">
+                    <i class="fas fa-user-friends fa-3x text-primary mb-2"></i>
+                    <h3>🎁 Programme de parrainage</h3>
+                    <p>Parrainez vos amis et gagnez de l'argent !</p>
+                </div>
+                <div class="card-body">
+                    <!-- Cartes bonus -->
+                    <div class="row text-center mb-4">
+                        <div class="col-6">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h2>{{ referrer_bonus }} FCFA</h2>
+                                    <small>Pour vous (parrain)</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <h2>{{ referred_bonus }} FCFA</h2>
+                                    <small>Pour votre ami (filleul)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Votre code promo -->
+                    <div class="alert alert-success text-center">
+                        <strong>Votre code de parrainage :</strong>
+                        <div class="display-4 fw-bold">{{ code.code }}</div>
+                        <button class="btn btn-primary mt-2" onclick="copyCode()">📋 Copier le code</button>
+                    </div>
+
+                    <!-- Lien de parrainage -->
+                    <div class="mb-4">
+                        <label>Votre lien de parrainage :</label>
+                        <div class="input-group">
+                            <input type="text" id="referralLink" class="form-control" value="{{ referral_link }}" readonly>
+                            <button class="btn btn-primary" onclick="copyLink()">Copier</button>
+                        </div>
+                    </div>
+
+                    <!-- Partager -->
+                    <div class="d-grid gap-2 mb-4">
+                        <a href="https://wa.me/?text={{ share_text|urlencode }}" class="btn btn-success" target="_blank">
+                            <i class="fab fa-whatsapp"></i> Partager sur WhatsApp
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ referral_link|urlencode }}" class="btn btn-primary" target="_blank">
+                            <i class="fab fa-facebook-f"></i> Partager sur Facebook
+                        </a>
+                    </div>
+
+                    <hr>
+
+                    <!-- Statistiques -->
+                    <div class="row text-center mb-4">
+                        <div class="col-4">
+                            <div class="border rounded p-2">
+                                <div class="h3">{{ total_referrals }}</div>
+                                <small>Personnes parrainées</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border rounded p-2">
+                                <div class="h3">{{ completed_referrals }}</div>
+                                <small>Validées</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border rounded p-2">
+                                <div class="h3">{{ total_earned|floatformat:0 }} FCFA</div>
+                                <small>Gagnés</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comment ça marche -->
+                    <div class="alert alert-info">
+                        <strong>📖 Comment ça marche ?</strong>
+                        <ol class="mb-0 mt-2">
+                            <li>Partagez votre code ou votre lien</li>
+                            <li>Votre ami s'inscrit avec votre code</li>
+                            <li>Il effectue son premier achat (minimum 10000 FCFA)</li>
+                            <li>Vous gagnez <strong>{{ referrer_bonus }} FCFA</strong> et lui <strong>{{ referred_bonus }} FCFA</strong></li>
+                        </ol>
+                    </div>
+
+                    <!-- Historique -->
+                    <h6 class="mt-4">📜 Historique des parrainages</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr><th>Ami parrainé</th><th>Date</th><th>Statut</th><th>Gain</th></tr>
+                            </thead>
+                            <tbody>
+                                {% for ref in referrals %}
+                                <tr>
+                                    <td>{{ ref.referred_name }}</small></td>
+                                    <td>{{ ref.created_at|date:"d/m/Y" }}</small></td>
+                                    <td>
+                                        {% if ref.status == 'completed' %}
+                                            <span class="badge bg-success">Validé</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">En attente</span>
+                                        {% endif %}
+                                    </small></td>
+                                    <td class="text-success">+{{ ref.referrer_bonus|floatformat:0 }} FCFA</small></td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="text-center">Aucun parrainage</small></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyCode() {
+    navigator.clipboard.writeText('{{ code.code }}');
+    alert('Code copié !');
+}
+function copyLink() {
+    var link = document.getElementById('referralLink');
+    link.select();
+    document.execCommand('copy');
+    alert('Lien copié !');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}Chat avec {{ other_user }} - OCALM{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-comment-dots text-primary"></i>
+                            <strong>Chat avec {{ other_user }}</strong>
+                            <small class="text-muted d-block">{{ other_role|capfirst }}</small>
+                        </div>
+                        <a href="{% url 'chat:chat_rooms' %}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Toutes les conversations
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-0" style="height: 500px; display: flex; flex-direction: column;">
+                    <!-- Messages -->
+                    <div id="chat-messages" class="p-3" style="flex: 1; overflow-y: auto;">
+                        {% for msg in messages %}
+                        <div class="mb-3 d-flex {% if msg.sender_name == user.username %}justify-content-end{% else %}justify-content-start{% endif %}">
+                            <div class="message-bubble {% if msg.sender_name == user.username %}bg-primary text-white{% else %}bg-light{% endif %} p-2 rounded" style="max-width: 70%;">
+                                <small class="d-block {% if msg.sender_name == user.username %}text-white-50{% else %}text-muted{% endif %}">
+                                    {{ msg.sender_name }}
+                                </small>
+                                <div>{{ msg.message }}</div>
+                                <small class="d-block {% if msg.sender_name == user.username %}text-white-50{% else %}text-muted{% endif %} text-end" style="font-size: 10px;">
+                                    {{ msg.created_at|date:"H:i" }}
+                                </small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Formulaire d'envoi -->
+                    <div class="border-top p-3">
+                        <div class="input-group">
+                            <input type="text" id="messageInput" class="form-control" placeholder="Votre message...">
+                            <button class="btn btn-primary" id="sendBtn">
+                                <i class="fas fa-paper-plane"></i> Envoyer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .message-bubble {
+        word-wrap: break-word;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    #chat-messages {
+        scroll-behavior: smooth;
+    }
+</style>
+
+<script>
+    const roomId = '{{ room.id }}';
+    const currentUser = '{{ user.username }}';
+    const csrftoken = '{{ csrf_token }}';
+    let lastMessageId = null;
+
+    // Envoyer un message
+    document.getElementById('sendBtn').addEventListener('click', sendMessage);
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    function sendMessage() {
+        const message = document.getElementById('messageInput').value.trim();
+        if (!message) return;
+
+        fetch(`/chat/send/${roomId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                addMessageToChat(data.message);
+                document.getElementById('messageInput').value = '';
+                scrollToBottom();
+            } else {
+                alert('Erreur: ' + data.error);
+            }
+        });
+    }
+
+    function addMessageToChat(msg) {
+        const messagesDiv = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `mb-3 d-flex ${msg.is_mine ? 'justify-content-end' : 'justify-content-start'}`;
+        messageDiv.innerHTML = `
+            <div class="message-bubble ${msg.is_mine ? 'bg-primary text-white' : 'bg-light'} p-2 rounded" style="max-width: 70%;">
+                <small class="d-block ${msg.is_mine ? 'text-white-50' : 'text-muted'}">${msg.sender}</small>
+                <div>${msg.text}</div>
+                <small class="d-block ${msg.is_mine ? 'text-white-50' : 'text-muted'} text-end" style="font-size: 10px;">${msg.time}</small>
+            </div>
+        `;
+        messagesDiv.appendChild(messageDiv);
+    }
+
+    function scrollToBottom() {
+        const messagesDiv = document.getElementById('chat-messages');
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // Scroll en bas au chargement
+    scrollToBottom();
+
+    // Rafraîchir les messages toutes les 3 secondes
+    setInterval(() => {
+        fetch(`/chat/room/${roomId}/refresh/`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.messages && data.messages.length) {
+                const currentMessages = document.querySelectorAll('.message-bubble');
+                if (data.messages.length > currentMessages.length) {
+                    const lastMsg = data.messages[data.messages.length - 1];
+                    if (lastMsg.sender !== currentUser) {
+                        addMessageToChat({
+                            sender: lastMsg.sender,
+                            text: lastMsg.text,
+                            time: lastMsg.time,
+                            is_mine: false
+                        });
+                        scrollToBottom();
+                    }
+                }
+            }
+        });
+    }, 3000);
+</script>
+{% endblock %}

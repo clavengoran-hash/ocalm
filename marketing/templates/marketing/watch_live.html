@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}{{ live.title }} - OCALM Live{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <div class="row">
+        <!-- Vidéo principale -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="bg-dark text-center p-5" style="min-height: 400px;">
+                        <i class="fas fa-video fa-5x text-white"></i>
+                        {% if is_seller %}
+                        <div class="mt-3">
+                            <span class="badge bg-danger">
+                                <i class="fas fa-circle"></i> EN DIRECT
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h4>{{ live.title }}</h4>
+                            <p class="text-muted small">
+                                <i class="fas fa-user"></i> {{ live.seller.username }} |
+                                <i class="fas fa-users"></i> {{ live.viewers }} spectateurs |
+                                <i class="fas fa-heart"></i> {{ live.likes }} likes
+                            </p>
+                        </div>
+                        {% if is_seller %}
+                        <a href="{% url 'end_live' live.id %}" class="btn btn-danger" onclick="return confirm('Terminer le live ?')">
+                            <i class="fas fa-stop"></i> Terminer
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    <p>{{ live.description }}</p>
+
+                    <!-- Produits en vente -->
+                    <hr>
+                    <h6>Produits en promotion 🔥</h6>
+                    <div class="row g-2">
+                        {% for product in products %}
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body p-2 text-center">
+                                    <small><strong>{{ product.title }}</strong></small>
+                                    <div class="text-primary fw-bold">{{ product.price }} FCFA</div>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                                        <button type="submit" class="btn btn-sm btn-primary w-100 mt-2">
+                                            <i class="fas fa-shopping-cart"></i> Acheter
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0"><i class="fas fa-comments"></i> Chat en direct</h6>
+                </div>
+                <div class="card-body p-0" style="height: 400px; overflow-y: auto;" id="chatMessages">
+                    {% for comment in comments %}
+                    <div class="border-bottom p-2">
+                        <strong>{{ comment.user.username }}</strong>
+                        <span class="small text-muted">{{ comment.created_at|date:"H:i" }}</span>
+                        <p class="mb-0 small">{{ comment.message }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <form method="post" action="{% url 'add_live_comment' live.id %}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" name="message" class="form-control" placeholder="Écrire un message..." required>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-refresh chat toutes les 5 secondes
+    setTimeout(function() {
+        location.reload();
+    }, 10000);
+
+    // Scroll to bottom of chat
+    var chatDiv = document.getElementById('chatMessages');
+    if(chatDiv) chatDiv.scrollTop = chatDiv.scrollHeight;
+</script>
+{% endblock %}
+<!-- Actions pour un live programmé -->
+<div class="btn-group">
+    <a href="{% url 'start_live' live.id %}" class="btn btn-sm btn-success">
+        <i class="fas fa-play"></i> Démarrer
+    </a>
+    <a href="{% url 'share_live_to_whatsapp' live.id %}" class="btn btn-sm btn-success" target="_blank">
+        <i class="fab fa-whatsapp"></i> Partager sur WhatsApp
+    </a>
+    <a href="{% url 'create_whatsapp_group' live.id %}" class="btn btn-sm btn-outline-success">
+        <i class="fab fa-whatsapp"></i> Créer un groupe
+    </a>
+</div>

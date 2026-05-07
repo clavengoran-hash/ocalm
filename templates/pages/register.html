@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Inscription - OCALM{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-white text-center">
+                    <h4>Inscription</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="first_name" class="form-control" placeholder="Prénom">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="last_name" class="form-control" placeholder="Nom">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" name="username" class="form-control" placeholder="Nom d'utilisateur" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" name="email" class="form-control" placeholder="Email">
+                        </div>
+                        <div class="mb-3">
+                            <input type="tel" name="phone_number" class="form-control" placeholder="Téléphone" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" name="password" class="form-control" placeholder="Mot de passe" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" name="password2" class="form-control" placeholder="Confirmer" required>
+                        </div>
+                        <div class="mb-3">
+                            <select name="role" class="form-select">
+                                <option value="buyer">Acheteur</option>
+                                <option value="seller">Vendeur</option>
+                                <option value="delivery">Livreur</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
+                    </form>
+                    <hr>
+                    <p class="text-center">Déjà inscrit ? <a href="/login/">Connexion</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

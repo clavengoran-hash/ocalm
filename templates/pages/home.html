@@ -27,10 +27,35 @@
             padding: 15px 0;
         }
         
-        .navbar-brand {
+        /* STYLE DU LOGO */
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        /* Logo image (si tu as une image) */
+        .logo-img {
+            height: 45px;
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        /* Logo texte stylé */
+        .logo-text {
             font-size: 1.8rem;
-            font-weight: bold;
-            color: #667eea !important;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-icon {
+            font-size: 28px;
+            color: #667eea;
+            margin-right: 8px;
         }
         
         .nav-link {
@@ -72,7 +97,7 @@
             transform: translateY(-2px);
         }
         
-        /* Hero Section - Centré */
+        /* Hero Section */
         .hero {
             min-height: 90vh;
             display: flex;
@@ -83,7 +108,6 @@
             color: white;
         }
         
-        /* TITRE PRINCIPAL - TRÈS GROS */
         .hero h1 {
             font-size: 5rem;
             font-weight: 800;
@@ -91,7 +115,6 @@
             animation: fadeInUp 0.8s ease;
         }
         
-        /* SOUS-TITRE - PLUS PETIT */
         .hero p {
             font-size: 1.5rem;
             margin-bottom: 30px;
@@ -143,7 +166,6 @@
             transform: translateY(-3px);
         }
         
-        /* Features */
         .features {
             background: white;
             padding: 60px 0;
@@ -196,7 +218,6 @@
             font-size: 0.9rem;
         }
         
-        /* Footer */
         footer {
             background: #1a1a2e;
             color: #888;
@@ -241,10 +262,23 @@
 </head>
 <body>
 
-    <!-- Menu -->
+    <!-- Menu avec LOGO -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="/">OCALM</a>
+            <!-- OPTION 1 : LOGO TEXTE GRADIENT (par défaut) -->
+            <a class="logo" href="/">
+                <i class="fas fa-shield-alt logo-icon"></i>
+                <span class="logo-text">OCALM</span>
+            </a>
+            
+            <!-- OPTION 2 : LOGO IMAGE (décommente et commente l'option 1) -->
+            <!-- 
+            <a class="logo" href="/">
+                <img src="{% static 'images/ocalm-logo.png' %}" alt="OCALM" class="logo-img">
+                <span class="logo-text">OCALM</span>
+            </a>
+            -->
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -266,14 +300,12 @@
         </div>
     </nav>
 
-    <!-- Hero Section - CENTRÉ -->
+    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <!-- TITRE TRÈS GROS -->
                     <h1>Fais tes affaires... <span class="highlight">Au Calme</span></h1>
-                    <!-- SOUS-TITRE PLUS PETIT -->
                     <p>Plateforme de paiement sécurisé avec système d'escrow</p>
                     <div class="hero-buttons">
                         {% if not user.is_authenticated %}

@@ -2,13 +2,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from pages import views  # Assurez-vous d'importer views
+from pages import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    # Pages principales
-    path('', views.home_view, name='home'),
+    # Pages principales - CORRIGÉ : utilisez les bons noms de fonctions
+    path('', views.home, name='home'),              # ← home, pas home_view
     path('about/', views.about_view, name='about'),
     path('contact/', views.contact_view, name='contact'),
     path('terms/', views.terms_view, name='terms'),
@@ -25,7 +25,6 @@ urlpatterns = [
     path('wallet/', views.wallet_view, name='wallet'),
 ]
 
-# Pour les fichiers media/static en développement
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

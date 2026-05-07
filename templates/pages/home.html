@@ -4,18 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCALM - Paiement sécurisé</title>
+    <title>OCALM - Paiement sécurisé en Afrique</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
+        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #0066FF 0%, #00AAFF 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
+            opacity: 0.3;
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
         
         .hero h1 {
@@ -62,6 +85,7 @@
             transform: translateY(-3px);
         }
         
+        /* Features Section */
         .features {
             padding: 80px 0;
             background: #f8f9fa;
@@ -79,6 +103,7 @@
         
         .feature-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
         
         .feature-icon {
@@ -97,6 +122,44 @@
             color: white;
         }
         
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, #0066FF, #00AAFF);
+            color: white;
+            padding: 60px 0;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+        
+        /* Testimonials */
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #0066FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .rating {
+            color: #FFD700;
+            margin: 10px 0;
+        }
+        
+        /* CTA Section */
         .cta {
             padding: 80px 0;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -105,19 +168,23 @@
         }
         
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .btn-custom { margin: 10px; }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .btn-custom {
+                margin: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container">
+        <div class="container hero-content">
             <div class="row align-items-center">
                 <div class="col-lg-6 text-white">
                     <h1>Fais tes affaires... <span class="highlight">Au Calme</span></h1>
-                    <p class="lead mb-4">Plateforme de paiement sécurisé avec système d'escrow.</p>
+                    <p class="lead mb-4">Plateforme de paiement sécurisé avec système d'escrow pour l'Afrique de l'Ouest. Achetez et vendez en toute confiance.</p>
                     <div class="mt-4">
                         {% if user.is_authenticated %}
                             <a href="/dashboard/" class="btn btn-primary-custom btn-custom">
@@ -125,7 +192,7 @@
                             </a>
                         {% else %}
                             <a href="/register/" class="btn btn-primary-custom btn-custom">
-                                <i class="fas fa-user-plus"></i> Créer un compte
+                                <i class="fas fa-user-plus"></i> Commencer gratuitement
                             </a>
                             <a href="/login/" class="btn btn-outline-custom btn-custom">
                                 <i class="fas fa-sign-in-alt"></i> Se connecter
@@ -134,7 +201,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 text-center">
-                    <i class="fas fa-shield-alt fa-8x text-white"></i>
+                    <img src="https://img.icons8.com/fluency/400/secure-payment.png" alt="Secure Payment" class="img-fluid">
                 </div>
             </div>
         </div>
@@ -145,7 +212,7 @@
         <div class="container">
             <div class="text-center mb-5">
                 <h2>Pourquoi choisir OCALM ?</h2>
-                <p class="text-muted">Une plateforme fiable et sécurisée</p>
+                <p class="text-muted">Une plateforme fiable et sécurisée pour toutes vos transactions</p>
             </div>
             <div class="row g-4">
                 <div class="col-md-3">
@@ -154,7 +221,7 @@
                             <i class="fas fa-shield-alt"></i>
                         </div>
                         <h5>Transaction sécurisée</h5>
-                        <p>Système d'escrow qui protège acheteurs et vendeurs</p>
+                        <p>Système d'escrow qui protège acheteurs et vendeurs jusqu'à la livraison</p>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -163,7 +230,7 @@
                             <i class="fas fa-bolt"></i>
                         </div>
                         <h5>Paiement instantané</h5>
-                        <p>Wave, Orange Money, MTN MoMo</p>
+                        <p>Wave, Orange Money, MTN MoMo - vos fonds sont disponibles immédiatement</p>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -172,7 +239,7 @@
                             <i class="fas fa-hand-holding-usd"></i>
                         </div>
                         <h5>Commission 1%</h5>
-                        <p>Seulement 1% sur chaque transaction</p>
+                        <p>Seulement 1% de commission sur chaque transaction</p>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -180,7 +247,7 @@
                         <div class="feature-icon">
                             <i class="fas fa-headset"></i>
                         </div>
-                        <h5>Support client</h5>
+                        <h5>Support 24/7</h5>
                         <p>Une équipe dédiée pour vous accompagner</p>
                     </div>
                 </div>
@@ -188,12 +255,36 @@
         </div>
     </section>
 
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="stat-number">10K+</div>
+                    <p>Transactions sécurisées</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number">500M+</div>
+                    <p>FCFA échangés</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number">98%</div>
+                    <p>Clients satisfaits</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number">100+</div>
+                    <p>Vendeurs actifs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- How It Works -->
-    <section style="padding: 80px 0;">
+    <section class="features">
         <div class="container">
             <div class="text-center mb-5">
                 <h2>Comment ça marche ?</h2>
-                <p class="text-muted">3 étapes simples</p>
+                <p class="text-muted">3 étapes simples pour vendre ou acheter en toute sécurité</p>
             </div>
             <div class="row">
                 <div class="col-md-4 text-center">
@@ -201,21 +292,84 @@
                         <i class="fas fa-user-plus fa-2x"></i>
                     </div>
                     <h5 class="mt-3">1. Créez un compte</h5>
-                    <p>Inscription gratuite</p>
+                    <p>Inscription gratuite en 2 minutes</p>
                 </div>
                 <div class="col-md-4 text-center">
                     <div class="feature-icon mx-auto" style="width: 60px; height: 60px;">
                         <i class="fas fa-shopping-cart fa-2x"></i>
                     </div>
                     <h5 class="mt-3">2. Publiez ou achetez</h5>
-                    <p>Mettez vos produits en vente</p>
+                    <p>Mettez vos produits en vente ou trouvez ce que vous cherchez</p>
                 </div>
                 <div class="col-md-4 text-center">
                     <div class="feature-icon mx-auto" style="width: 60px; height: 60px;">
                         <i class="fas fa-check-circle fa-2x"></i>
                     </div>
                     <h5 class="mt-3">3. Recevez le paiement</h5>
-                    <p>L'argent est libéré après livraison</p>
+                    <p>L'argent est libéré après validation de la livraison</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="stats" style="background: #f8f9fa; color: #333;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2>Ce que nos utilisateurs disent</h2>
+                <p class="text-muted">Ils nous font confiance</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="testimonial-avatar">
+                                <i class="fas fa-user fa-2x text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Amadou K.</h6>
+                                <small>Vendeur</small>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            ★★★★★
+                        </div>
+                        <p>"Grâce à OCALM, j'ai vendu mes produits sans jamais avoir peur des arnaques. Les paiements sont sécurisés !"</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="testimonial-avatar">
+                                <i class="fas fa-user fa-2x text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Fatima D.</h6>
+                                <small>Acheteuse</small>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            ★★★★★
+                        </div>
+                        <p>"Je reçois mes colis avant de valider le paiement. C'est rassurant et très professionnel !"</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="testimonial-avatar">
+                                <i class="fas fa-user fa-2x text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Ibrahim S.</h6>
+                                <small>Livreur</small>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            ★★★★★
+                        </div>
+                        <p>"Les livraisons sont bien organisées et les gains sont versés rapidement."</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -224,11 +378,11 @@
     <!-- CTA Section -->
     <section class="cta">
         <div class="container">
-            <h2 class="mb-4">Prêt à commencer ?</h2>
-            <p class="lead mb-4">Rejoignez la plateforme de paiement sécurisé</p>
+            <h2 class="mb-4">Prêt à rejoindre l'aventure ?</h2>
+            <p class="lead mb-4">Des milliers de vendeurs et acheteurs nous font déjà confiance</p>
             {% if not user.is_authenticated %}
                 <a href="/register/" class="btn btn-primary-custom btn-custom btn-lg">
-                    <i class="fas fa-rocket"></i> Créer un compte
+                    <i class="fas fa-rocket"></i> Créer un compte gratuitement
                 </a>
             {% else %}
                 <a href="/dashboard/" class="btn btn-primary-custom btn-custom btn-lg">
@@ -244,25 +398,24 @@
             <div class="row">
                 <div class="col-md-4">
                     <h5><i class="fas fa-shield-alt"></i> OCALM</h5>
-                    <p>Plateforme de paiement sécurisé.</p>
+                    <p>La plateforme de paiement sécurisé pour l'Afrique de l'Ouest.</p>
                 </div>
                 <div class="col-md-4">
-                    <h5>Liens utiles</h5>
                     <ul class="list-unstyled">
                         <li><a href="/about/" class="text-white text-decoration-none">À propos</a></li>
                         <li><a href="/contact/" class="text-white text-decoration-none">Contact</a></li>
-                        <li><a href="/terms/" class="text-white text-decoration-none">Conditions</a></li>
+                        <li><a href="/terms/" class="text-white text-decoration-none">Conditions générales</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <h5>Contact</h5>
-                    <p><i class="fas fa-phone"></i> +225 01 72 28 84 95 </p>
-                    <p><i class="fas fa-envelope"></i> contact@ocalm.com</p>
+                    <p><i class="fas fa-phone"></i> +225 01 72 28 84 95</p>
+                    <p><i class="fas fa-envelope"></i> support@ocalm.com</p>
                 </div>
             </div>
             <hr class="mt-4">
             <div class="text-center">
-                <p>&copy; 2024 OCALM</p>
+                <p>&copy; 2024 OCALM - Tous droits réservés</p>
             </div>
         </div>
     </footer>

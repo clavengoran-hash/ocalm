@@ -4,47 +4,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCALM - Paiement sécurisé en Afrique</title>
+    <title>OCALM - Paiement sécurisé</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #0066FF 0%, #00AAFF 100%);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+        }
+        
+        /* Menu */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea !important;
+        }
+        
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: #667eea !important;
+        }
+        
+        .btn-login {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 50px;
+            padding: 8px 25px;
+            transition: 0.3s;
+        }
+        
+        .btn-login:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-register {
+            background: #667eea;
+            border: none;
+            color: white;
+            border-radius: 50px;
+            padding: 8px 25px;
+            transition: 0.3s;
+        }
+        
+        .btn-register:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section - Centré */
+        .hero {
+            min-height: 90vh;
             display: flex;
             align-items: center;
-            position: relative;
-            overflow: hidden;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
         
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 150%;
-            height: 150%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
-            opacity: 0.3;
-            animation: rotate 20s linear infinite;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-        
+        /* TITRE PRINCIPAL - TRÈS GROS */
         .hero h1 {
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 800;
-            margin-bottom: 1rem;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        /* SOUS-TITRE - PLUS PETIT */
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            animation: fadeInUp 0.8s ease 0.1s both;
+            font-weight: 400;
         }
         
         .hero .highlight {
@@ -54,17 +107,22 @@
             background-clip: text;
         }
         
-        .btn-custom {
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s;
+        .hero-buttons {
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        
+        .hero-buttons .btn {
             margin: 0 10px;
+            padding: 12px 35px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: 0.3s;
         }
         
         .btn-primary-custom {
             background: white;
-            color: #0066FF;
+            color: #667eea;
             border: none;
         }
         
@@ -81,35 +139,40 @@
         
         .btn-outline-custom:hover {
             background: white;
-            color: #0066FF;
+            color: #667eea;
             transform: translateY(-3px);
         }
         
-        /* Features Section */
+        /* Features */
         .features {
-            padding: 80px 0;
-            background: #f8f9fa;
+            background: white;
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 50px;
+            color: #333;
         }
         
         .feature-card {
-            background: white;
+            text-align: center;
             padding: 30px;
             border-radius: 15px;
-            text-align: center;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
             height: 100%;
         }
         
         .feature-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
         
         .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #0066FF, #00AAFF);
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -118,280 +181,163 @@
         }
         
         .feature-icon i {
-            font-size: 40px;
+            font-size: 30px;
             color: white;
         }
         
-        /* Stats Section */
-        .stats {
-            background: linear-gradient(135deg, #0066FF, #00AAFF);
-            color: white;
-            padding: 60px 0;
+        .feature-card h5 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
         }
         
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 800;
+        .feature-card p {
+            color: #666;
+            font-size: 0.9rem;
         }
         
-        /* Testimonials */
-        .testimonial-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .testimonial-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #0066FF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-        }
-        
-        .rating {
-            color: #FFD700;
-            margin: 10px 0;
-        }
-        
-        /* CTA Section */
-        .cta {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
+        /* Footer */
+        footer {
+            background: #1a1a2e;
+            color: #888;
+            padding: 40px 0 20px;
             text-align: center;
+        }
+        
+        footer a {
+            color: #888;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        
+        footer a:hover {
+            color: #667eea;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
             }
-            .btn-custom {
+            .hero p {
+                font-size: 1rem;
+            }
+            .hero-buttons .btn {
                 margin: 10px;
+                display: block;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
+
+    <!-- Menu -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">OCALM</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/listings/">Boutique</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about/">À propos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact/">Contact</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="/dashboard/">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link btn-login" href="/logout/">Déconnexion</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link btn-login" href="/login/">Connexion</a></li>
+                        <li class="nav-item"><a class="nav-link btn-register" href="/register/">Inscription</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section - CENTRÉ -->
     <section class="hero">
-        <div class="container hero-content">
-            <div class="row align-items-center">
-                <div class="col-lg-6 text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- TITRE TRÈS GROS -->
                     <h1>Fais tes affaires... <span class="highlight">Au Calme</span></h1>
-                    <p class="lead mb-4">Plateforme de paiement sécurisé avec système d'escrow pour l'Afrique de l'Ouest. Achetez et vendez en toute confiance.</p>
-                    <div class="mt-4">
-                        {% if user.is_authenticated %}
-                            <a href="/dashboard/" class="btn btn-primary-custom btn-custom">
-                                <i class="fas fa-tachometer-alt"></i> Tableau de bord
-                            </a>
+                    <!-- SOUS-TITRE PLUS PETIT -->
+                    <p>Plateforme de paiement sécurisé avec système d'escrow</p>
+                    <div class="hero-buttons">
+                        {% if not user.is_authenticated %}
+                            <a href="/register/" class="btn btn-primary-custom">🚀 Commencer gratuitement</a>
+                            <a href="/login/" class="btn btn-outline-custom">🔐 Se connecter</a>
                         {% else %}
-                            <a href="/register/" class="btn btn-primary-custom btn-custom">
-                                <i class="fas fa-user-plus"></i> Commencer gratuitement
-                            </a>
-                            <a href="/login/" class="btn btn-outline-custom btn-custom">
-                                <i class="fas fa-sign-in-alt"></i> Se connecter
-                            </a>
+                            <a href="/dashboard/" class="btn btn-primary-custom">📊 Tableau de bord</a>
                         {% endif %}
                     </div>
                 </div>
-                <div class="col-lg-6 text-center">
-                    <img src="https://img.icons8.com/fluency/400/secure-payment.png" alt="Secure Payment" class="img-fluid">
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Features -->
     <section class="features">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2>Pourquoi choisir OCALM ?</h2>
-                <p class="text-muted">Une plateforme fiable et sécurisée pour toutes vos transactions</p>
-            </div>
+            <h2 class="section-title">Pourquoi choisir OCALM ?</h2>
             <div class="row g-4">
                 <div class="col-md-3">
                     <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h5>Transaction sécurisée</h5>
-                        <p>Système d'escrow qui protège acheteurs et vendeurs jusqu'à la livraison</p>
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h5>Sécurisé</h5>
+                        <p>Paiement escrow - vos fonds sont protégés</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <h5>Paiement instantané</h5>
-                        <p>Wave, Orange Money, MTN MoMo - vos fonds sont disponibles immédiatement</p>
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                        <h5>Rapide</h5>
+                        <p>Transactions instantanées</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-hand-holding-usd"></i>
-                        </div>
-                        <h5>Commission 1%</h5>
-                        <p>Seulement 1% de commission sur chaque transaction</p>
+                        <div class="feature-icon"><i class="fas fa-handshake"></i></div>
+                        <h5>Fiable</h5>
+                        <p>100% sécurisé</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-headset"></i>
-                        </div>
-                        <h5>Support 24/7</h5>
-                        <p>Une équipe dédiée pour vous accompagner</p>
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h5>Mobile</h5>
+                        <p>Wave, Orange Money, MTN MoMo</p>
                     </div>
                 </div>
             </div>
-        </div>
-
-    <!-- How It Works -->
-    <section class="features">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2>Comment ça marche ?</h2>
-                <p class="text-muted">3 étapes simples pour vendre ou acheter en toute sécurité</p>
-            </div>
-            <div class="row">
-                <div class="col-md-4 text-center">
-                    <div class="feature-icon mx-auto" style="width: 60px; height: 60px;">
-                        <i class="fas fa-user-plus fa-2x"></i>
-                    </div>
-                    <h5 class="mt-3">1. Créez un compte</h5>
-                    <p>Inscription gratuite en 2 minutes</p>
-                </div>
-                <div class="col-md-4 text-center">
-                    <div class="feature-icon mx-auto" style="width: 60px; height: 60px;">
-                        <i class="fas fa-shopping-cart fa-2x"></i>
-                    </div>
-                    <h5 class="mt-3">2. Publiez ou achetez</h5>
-                    <p>Mettez vos produits en vente ou trouvez ce que vous cherchez</p>
-                </div>
-                <div class="col-md-4 text-center">
-                    <div class="feature-icon mx-auto" style="width: 60px; height: 60px;">
-                        <i class="fas fa-check-circle fa-2x"></i>
-                    </div>
-                    <h5 class="mt-3">3. Recevez le paiement</h5>
-                    <p>L'argent est libéré après validation de la livraison</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="stats" style="background: #f8f9fa; color: #333;">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2>Ce que nos utilisateurs disent</h2>
-                <p class="text-muted">Ils nous font confiance</p>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="testimonial-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="testimonial-avatar">
-                                <i class="fas fa-user fa-2x text-white"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">Amadou K.</h6>
-                                <small>Vendeur</small>
-                            </div>
-                        </div>
-                        <div class="rating">
-                            ★★★★★
-                        </div>
-                        <p>"Grâce à OCALM, j'ai vendu mes produits sans jamais avoir peur des arnaques. Les paiements sont sécurisés !"</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="testimonial-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="testimonial-avatar">
-                                <i class="fas fa-user fa-2x text-white"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">Fatima D.</h6>
-                                <small>Acheteuse</small>
-                            </div>
-                        </div>
-                        <div class="rating">
-                            ★★★★★
-                        </div>
-                        <p>"Je reçois mes colis avant de valider le paiement. C'est rassurant et très professionnel !"</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="testimonial-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="testimonial-avatar">
-                                <i class="fas fa-user fa-2x text-white"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">Ibrahim S.</h6>
-                                <small>Livreur</small>
-                            </div>
-                        </div>
-                        <div class="rating">
-                            ★★★★★
-                        </div>
-                        <p>"Les livraisons sont bien organisées et les gains sont versés rapidement."</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2 class="mb-4">Prêt à rejoindre l'aventure ?</h2>
-            <p class="lead mb-4">Des milliers de vendeurs et acheteurs nous font déjà confiance</p>
-            {% if not user.is_authenticated %}
-                <a href="/register/" class="btn btn-primary-custom btn-custom btn-lg">
-                    <i class="fas fa-rocket"></i> Créer un compte gratuitement
-                </a>
-            {% else %}
-                <a href="/dashboard/" class="btn btn-primary-custom btn-custom btn-lg">
-                    <i class="fas fa-tachometer-alt"></i> Accéder à mon espace
-                </a>
-            {% endif %}
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-5">
+    <footer>
         <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5><i class="fas fa-shield-alt"></i> OCALM</h5>
-                    <p>La plateforme de paiement sécurisé pour l'Afrique de l'Ouest.</p>
-                </div>
-                <div class="col-md-4">
-                    <ul class="list-unstyled">
-                        <li><a href="/about/" class="text-white text-decoration-none">À propos</a></li>
-                        <li><a href="/contact/" class="text-white text-decoration-none">Contact</a></li>
-                        <li><a href="/terms/" class="text-white text-decoration-none">Conditions générales</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Contact</h5>
-                    <p><i class="fas fa-phone"></i> +225 01 72 28 84 95</p>
-                    <p><i class="fas fa-envelope"></i> support@ocalm.com</p>
-                </div>
+            <div class="mb-3">
+                <a href="/">Accueil</a>
+                <a href="/listings/">Boutique</a>
+                <a href="/about/">À propos</a>
+                <a href="/contact/">Contact</a>
             </div>
-            <hr class="mt-4">
-            <div class="text-center">
-                <p>&copy; 2024 OCALM - Tous droits réservés</p>
+            <div class="mb-3">
+                <a href="/terms/">Conditions générales</a>
             </div>
+            <p>&copy; 2025 OCALM - Paiement sécurisé</p>
         </div>
     </footer>
 

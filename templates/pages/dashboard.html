@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - OCALM{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center">
+        <h1>Bienvenue {{ user.username }}</h1>
+        <p>Rôle : {{ user.role }}</p>
+        <a href="/listings/" class="btn btn-primary">Boutique</a>
+        <a href="/wallet/" class="btn btn-success">Portefeuille</a>
+        <a href="/logout/" class="btn btn-danger">Déconnexion</a>
+    </div>
+</div>
+{% endblock %}
